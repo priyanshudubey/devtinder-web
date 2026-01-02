@@ -7,30 +7,35 @@ import { BASE_URL } from "../utils/constants";
 
 const Feed = () => {
   const feed = useSelector((store) => store.feed);
-  // console.log(feed);
   const dispatch = useDispatch();
 
   const getFeed = async () => {
-    if (feed) return;
+    // FIX 1: Only return if feed exists AND has items
+    if (feed && feed.length > 0) return;
+
     try {
       const res = await axios.get(`${BASE_URL}feed`, {
         withCredentials: true,
       });
-      console.log("Printing response: ", res.data);
       dispatch(addFeed(res?.data?.user));
     } catch (err) {
-      return err.message;
+      console.error(err.message);
     }
   };
+
   useEffect(() => {
     getFeed();
   }, []);
+
+  // FIX 2: Handle empty feed case safely
+  if (!feed) return null;
+  if (feed.length === 0)
+    return <h1 className="flex justify-center my-10">No new users found!</h1>;
+
   return (
-    feed && (
-      <div className="flex justify-center my-4">
-        <UserCard user={feed[0]} />
-      </div>
-    )
+    <div className="flex justify-center my-4">
+      <UserCard user={feed[0]} />
+    </div>
   );
 };
 
