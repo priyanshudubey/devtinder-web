@@ -23,7 +23,6 @@ const Premium = () => {
       ],
       cta: "Current Plan",
       highlighted: false,
-      disabled: true,
     },
     {
       name: "Premium",
@@ -40,7 +39,6 @@ const Premium = () => {
       ],
       cta: "Upgrade to Premium",
       highlighted: true,
-      disabled: false,
     },
     {
       name: "Premium+",
@@ -57,9 +55,34 @@ const Premium = () => {
       ],
       cta: "Upgrade to Premium+",
       highlighted: false,
-      disabled: false,
     },
   ];
+
+  const isPlanDisabled = (planName) => {
+    if (planName === "Free") {
+      return true;
+    }
+    if (user?.membershipType === planName) {
+      return true;
+    }
+    if (user?.membershipType === "Premium+" && planName === "Premium") {
+      return true;
+    }
+    return false;
+  };
+
+  const getButtonText = (plan) => {
+    if (plan.name === "Free") {
+      return plan.cta;
+    }
+    if (user?.membershipType === plan.name) {
+      return "Current Plan";
+    }
+    if (user?.membershipType === "Premium+" && plan.name === "Premium") {
+      return "Current Plan (Premium+)";
+    }
+    return plan.cta;
+  };
 
   const handleBuyClick = async (type) => {
     // Check if user already has this plan or a higher plan
@@ -73,15 +96,6 @@ const Premium = () => {
       setShowMessage(
         "You already have Premium+ which includes all Premium features!"
       );
-      setTimeout(() => setShowMessage(""), 3000);
-      return;
-    }
-
-    if (
-      user?.membershipType === "Premium" ||
-      user?.membershipType === "Premium+"
-    ) {
-      setShowMessage(`You already have ${user.membershipType} membership!`);
       setTimeout(() => setShowMessage(""), 3000);
       return;
     }
@@ -189,12 +203,12 @@ const Premium = () => {
               key={index}
               className={`mm-card bg-black p-8 relative ${
                 plan.highlighted
-                  ? "ring-2 ring-teal-500 shadow-2xl scale-105"
+                  ? "ring-2 ring-purple-900 shadow-2xl scale-105"
                   : ""
               }`}>
               {plan.highlighted && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-teal-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
+                  <span className="bg-purple-900 text-white px-4 py-1 rounded-full text-sm font-semibold">
                     Most Popular
                   </span>
                 </div>
@@ -203,7 +217,7 @@ const Premium = () => {
               <div className="text-center mb-6">
                 <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
                 <div className="mb-3">
-                  <span className="text-4xl font-bold text-teal-600">
+                  <span className="text-4xl font-bold text-purple-900">
                     {plan.price}
                   </span>
                   <span className="text-base-content/60 ml-2">
@@ -222,7 +236,7 @@ const Premium = () => {
                     className="flex items-start gap-3">
                     {feature.included ? (
                       <svg
-                        className="w-5 h-5 text-teal-500 mt-0.5 shrink-0"
+                        className="w-5 h-5 text-purple-900 mt-0.5 shrink-0"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24">
@@ -262,14 +276,14 @@ const Premium = () => {
               <button
                 onClick={() => handleBuyClick(plan.name)}
                 className={`btn w-full ${
-                  plan.highlighted
-                    ? "btn-primary"
-                    : plan.disabled
+                  isPlanDisabled(plan.name)
                     ? "btn-disabled"
+                    : plan.highlighted
+                    ? "btn-primary"
                     : "btn-outline"
                 }`}
-                disabled={plan.disabled}>
-                {plan.cta}
+                disabled={isPlanDisabled(plan.name)}>
+                {getButtonText(plan)}
               </button>
             </div>
           ))}
@@ -284,7 +298,7 @@ const Premium = () => {
             Need a custom plan?{" "}
             <a
               href="#"
-              className="text-teal-600 hover:underline">
+              className="text-purple-900 hover:underline">
               Contact us
             </a>
           </p>

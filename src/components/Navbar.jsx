@@ -4,6 +4,7 @@ import { removeUser } from "../utils/userSlice";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
@@ -26,7 +27,7 @@ const Navbar = () => {
     }
   };
   return (
-    <div className="navbar bg-indigo-700 border-b shadow-sm">
+    <div className="navbar bg-purple-900 border-b shadow-sm">
       <div className="flex-1">
         <Link
           className="normal-case text-xl font-semibold text-white flex"
@@ -45,8 +46,11 @@ const Navbar = () => {
             <button
               className="flex items-center gap-3 px-3 py-1 rounded hover:bg-base-200"
               tabIndex={0}>
-              <div className="text-sm">
+              <div className="text-sm flex items-center gap-1">
                 Welcome, <span className="font-medium">{user.firstName}</span>
+                {user.membershipType && user.membershipType !== "Free" && (
+                  <RiVerifiedBadgeFill className="w-4 h-4 text-blue-500" />
+                )}
               </div>
               <div className="avatar">
                 <div className="w-9 rounded-full ring-2 ring-white overflow-hidden">
@@ -59,7 +63,7 @@ const Navbar = () => {
             </button>
             <ul
               tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-indigo-700 rounded-box mt-2 w-44 p-2 shadow">
+              className="menu menu-sm dropdown-content bg-purple-900 rounded-box mt-2 w-44 p-2 shadow">
               <li>
                 <Link
                   to="/profile"

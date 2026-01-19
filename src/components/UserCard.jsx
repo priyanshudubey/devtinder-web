@@ -3,6 +3,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { removeUser } from "../utils/feedSlice";
 import { BASE_URL } from "../utils/constants";
+import { RiVerifiedBadgeFill } from "react-icons/ri";
 
 const UserCard = ({ user, isProfile = false, onEdit }) => {
   const [processing, setProcessing] = useState(false);
@@ -44,7 +45,7 @@ const UserCard = ({ user, isProfile = false, onEdit }) => {
 
   return (
     <div>
-      <div className="card card-side bg-base-300 shadow-lg max-w-lg mx-auto my-4">
+      <div className="card card-side bg-base-200 shadow-lg max-w-lg mx-auto my-4">
         <figure className="w-1/3 shrink-0">
           <img
             src={photoURL}
@@ -54,7 +55,15 @@ const UserCard = ({ user, isProfile = false, onEdit }) => {
         </figure>
 
         <div className="card-body p-4 md:p-6">
-          <h2 className="card-title">{firstName + " " + lastName}</h2>
+          <h2 className="card-title flex items-center gap-2">
+            {firstName + " " + lastName}
+            {user.membershipType && user.membershipType !== "Free" && (
+              <RiVerifiedBadgeFill
+                className="w-5 h-5 text-blue-500"
+                title={user.membershipType}
+              />
+            )}
+          </h2>
           <p className="text-sm text-base-content/80">{about}</p>
           <div className="mt-4 text-sm text-base-content/70 space-y-1">
             {age && (
@@ -91,7 +100,7 @@ const UserCard = ({ user, isProfile = false, onEdit }) => {
           <div className="card-actions justify-end mt-4">
             {isProfile ? (
               <button
-                className="btn btn-primary btn-sm"
+                className="btn bg-purple-900 hover:bg-purple-700 btn-sm"
                 onClick={onEdit}>
                 Edit Profile
               </button>
@@ -104,7 +113,7 @@ const UserCard = ({ user, isProfile = false, onEdit }) => {
                   {processing ? "..." : "Ignore"}
                 </button>
                 <button
-                  className="btn btn-primary btn-sm"
+                  className="btn bg-purple-900 hover:bg-purple-700 btn-sm"
                   onClick={() => handleSendRequest("interested")}
                   disabled={processing}>
                   {processing ? "..." : "Interested"}

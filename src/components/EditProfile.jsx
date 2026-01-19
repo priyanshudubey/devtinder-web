@@ -170,7 +170,7 @@ function EditProfile({ user, onCancel }) {
               </button>
               <button
                 type="submit"
-                className="btn btn-primary">
+                className="btn bg-purple-900 hover:bg-purple-700">
                 Save Changes
               </button>
             </div>
